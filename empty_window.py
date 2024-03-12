@@ -2,22 +2,26 @@ import sys
 import pygame
 
 WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
+FRAME_RATE = 60
 
+# Initializing Game, dependencies and Setting Window Size
 pygame.init()
+pygame.display.set_caption(title="Pysteroids ☄")  # Set the window title
 clock = pygame.time.Clock()
-exit_the_game = False
-display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-pygame.display.set_caption(title="Pysteroids ☄")
+display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))  # Create the Game area (surface)
 
-# Importing images
+# Background
 background_surf = pygame.image.load('./graphics/background.png').convert_alpha()
 background_surf.fill((255, 255, 255, 180), None, pygame.BLEND_RGBA_MULT)
-ship_surf = pygame.image.load('./graphics/ship.png').convert_alpha()
-ship_rec = ship_surf.get_rect(center=(640, 360))
 
-# Importing text
+# Ship Sprite
+ship_surf = pygame.image.load('./graphics/ship.png').convert_alpha()
+ship_rec = ship_surf.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+
+# Text
 font = pygame.font.Font('./graphics/subatomic.ttf', size=50)
 text_surf = font.render('Space', True, (255, 255, 255))
+text_rec = text_surf.get_rect(centerx=(WINDOW_WIDTH/2), bottom=(WINDOW_HEIGHT - 20))
 
 while True:
     # Handle Input
@@ -30,11 +34,17 @@ while True:
             sys.exit()
 
     # Update the screen
-    clock.tick(60)
-    display_surface.fill((12, 2, 26))
-    display_surface.blit(background_surf, (0, 0))
-    display_surface.blit(text_surf, (((WINDOW_WIDTH / 2) - (text_surf.get_width() / 2)), WINDOW_HEIGHT - 100))
-    ship_rec.bottom -= 4
+    clock.tick(FRAME_RATE)  # Set FrameRate
+
+    display_surface.fill((12, 2, 26))  # Fill the background color
+    display_surface.blit(background_surf, (0, 0))  # Apply the Background Image
+
+    display_surface.blit(text_surf, text_rec)  # Set Text Position.
+
+    # Update Ship Position
+    if ship_rec.y >= 0:
+        ship_rec.y -= 4
     display_surface.blit(ship_surf, ship_rec)
+
     # Apply the changes (end of rendering)
     pygame.display.update()
