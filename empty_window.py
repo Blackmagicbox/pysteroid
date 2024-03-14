@@ -2,7 +2,7 @@ import sys
 import pygame
 
 WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
-FRAME_RATE = 600    
+FRAME_RATE = 600
 
 # Initializing Game, dependencies and Setting Window Size
 pygame.init()
@@ -24,30 +24,32 @@ text_surf = font.render('Space', True, (255, 255, 255))
 text_rec = text_surf.get_rect(midbottom=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 80))
 
 while True:
-    # Handle Input
+    # 1.Handle Input
     for event in pygame.event.get():
         # Handle Quiting the game.
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        # Handle Moving the ship
-        if event.type == pygame.MOUSEMOTION:
-            ship_rec.center = event.pos
-
-        # Handle Shooting
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print("Pew!")
-            print("My ship coordinates: ", event.pos)
+        # # Handle Moving the ship
+        # if event.type == pygame.MOUSEMOTION:
+        #     ship_rec.center = event.pos
+        #
+        # # Handle Shooting
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #     print("Pew!")
+        #     print("My ship coordinates: ", event.pos)
 
     # Update the screen
     clock.tick(FRAME_RATE)  # Set FrameRate
+
+    # Mouse Input
 
     display_surface.fill((12, 2, 26))  # Fill the background color
     display_surface.blit(background_surf, (0, 0))  # Apply the Background Image
 
     display_surface.blit(text_surf, text_rec)  # Set Text Position.
 
-    # Update Ship Position
+    #  2.Update Ship Position
     if ship_rec.top < 0:
         ship_rec.top = 0
     elif ship_rec.bottom > WINDOW_HEIGHT:
