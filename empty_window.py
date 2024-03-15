@@ -2,7 +2,7 @@ import sys
 import pygame
 
 WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
-FRAME_RATE = 60
+FRAME_RATE = 120
 
 #  Game init
 pygame.init()
@@ -43,13 +43,15 @@ while True:
         #         print('pew pew!')
 
     # Framerate Limit
-    clock.tick(FRAME_RATE)  # Set FrameRate
+    dt = (clock.tick(FRAME_RATE) / 1000)  # Set FrameRate
 
     # Mouse Input
     ship_rec.center = pygame.mouse.get_pos()
 
     # Update
-    laser_rec.y -= 10
+    laser_rec.y -= 100 * dt
+    print('delta time', dt)
+    print(laser_rec.y)
 
     # Prevent ship from going out of bounds
     # if ship_rec.top < 0:
