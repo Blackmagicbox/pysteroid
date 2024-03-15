@@ -64,9 +64,12 @@ while True:
     # Drawing
     display_surface.fill((12, 2, 26))  # Fill the background color
     display_surface.blit(background_surf, (0, 0))  # Apply the Background Image
-    display_surface.blit(ship_surf, ship_rec)
+
     display_surface.blit(text_surf, text_rec)  # Set Text Position.
+    pygame.draw.rect(display_surface, "white", text_rec.inflate((30, 30)), width=8, border_radius=5)
+
     display_surface.blit(laser_surf, laser_rec)
+    display_surface.blit(ship_surf, ship_rec)
 
     # Draw the final Frame
     pygame.display.update()
