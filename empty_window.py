@@ -2,7 +2,7 @@ import sys
 import pygame
 
 WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
-FRAME_RATE = 600
+FRAME_RATE = 60
 
 # Initializing Game, dependencies and Setting Window Size
 pygame.init()
@@ -17,9 +17,13 @@ pygame.mouse.set_visible(False)
 background_surf = pygame.image.load('./graphics/background.png').convert_alpha()
 background_surf.fill((255, 255, 255, 180), None, pygame.BLEND_RGBA_MULT)
 
+# Player sprites
 # Ship Sprite
 ship_surf = pygame.image.load('./graphics/ship.png').convert_alpha()
 ship_rec = ship_surf.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+# Laser beam Sprite
+laser_surf = pygame.image.load('./graphics/laser.png').convert_alpha()
+laser_rec = laser_surf.get_rect()
 
 # Text
 font = pygame.font.Font('./graphics/subatomic.ttf', size=50)
@@ -33,6 +37,10 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                laser_rec.midbottom = ship_rec.midtop
+                print('pew pew!')
 
     # Update the screen
     clock.tick(FRAME_RATE)  # Set FrameRate
@@ -40,17 +48,15 @@ while True:
     # Mouse Input
     ship_rec.center = pygame.mouse.get_pos()
 
-    # Position sprites
+    # Position Background sprites
     display_surface.fill((12, 2, 26))  # Fill the background color
     display_surface.blit(background_surf, (0, 0))  # Apply the Background Image
 
+    # Position Text Sprite
     display_surface.blit(text_surf, text_rec)  # Set Text Position.
 
-    # Shoot
-    has_shot = pygame.mouse.get_pressed()[0]
-    if has_shot:
-        print("pew pew!")
-        has_shot = False
+    # Position Laser sprites
+    display_surface.blit(laser_surf, laser_rec)
 
     #  2.Update Ship Position
     # Prevent ship from going out of bounds
@@ -64,6 +70,8 @@ while True:
         ship_rec.right = WINDOW_WIDTH
 
     display_surface.blit(ship_surf, ship_rec)
+
+    laser_rec.bottom -= 10
 
     # Apply the changes (end of rendering)
     pygame.display.update()
