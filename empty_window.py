@@ -4,6 +4,14 @@ import pygame
 WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 FRAMERATE = 120
 
+
+def laser_update(ll, dt, speed=300):
+    for laser in ll:
+        laser.y -= round(speed * dt)
+        if laser.bottom < 0:
+            ll.remove(laser)
+
+
 #  Game init
 pygame.init()
 display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))  # Create the Game area (surface)
@@ -22,7 +30,7 @@ background_surf = pygame.image.load('./graphics/background.png').convert_alpha()
 
 # Laser import
 laser_surf = pygame.image.load('./graphics/laser.png').convert_alpha()
-laser_rec = laser_surf.get_rect(midbottom=ship_rec.midtop)
+laser_list = []
 
 background_surf.fill((255, 255, 255, 180), None, pygame.BLEND_RGBA_MULT)
 
@@ -37,21 +45,20 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        # if event.type == pygame.MOUSEBUTTONDOWN:
-        #     if event.button == 1:
-        #         laser_rec.midbottom = ship_rec.midtop
-        #         print('pew pew!')
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            laser_rec = laser_surf.get_rect(midbottom=ship_rec.midtop)
+            laser_list.append(laser_rec)
+            print('pew pew!')
 
     # Framerate Limit
-    dt = (clock.tick(FRAMERATE) / 1000)  # Set FrameRate
+    delta_time = (clock.tick(FRAMERATE) / 1000)  # Set FrameRate
 
     # Mouse Input
     ship_rec.center = pygame.mouse.get_pos()
 
     # Update
-    laser_rec.y -= round(100 * dt)
-    print('delta time', dt)
-    print(laser_rec.y)
+    # for laser_rec in laser_list:
+    laser_update(laser_list, delta_time)
 
     # Prevent ship from going out of bounds
     # if ship_rec.top < 0:
@@ -70,7 +77,9 @@ while True:
     display_surface.blit(text_surf, text_rec)  # Set Text Position.
     pygame.draw.rect(display_surface, "white", text_rec.inflate((30, 30)), width=8, border_radius=5)
 
-    display_surface.blit(laser_surf, laser_rec)
+    for rect in laser_list:
+        display_surface.blit(laser_surf, rect)
+
     display_surface.blit(ship_surf, ship_rec)
 
     # Draw the final Frame
