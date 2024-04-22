@@ -66,7 +66,6 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN and can_shoot:
             laser_rec = laser_surf.get_rect(midbottom=ship_rec.midtop)
             laser_list.append(laser_rec)
-            # print('pew pew!')
             can_shoot = False
             shoot_time = pygame.time.get_ticks()
 
