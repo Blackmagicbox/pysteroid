@@ -13,7 +13,7 @@ def laser_update(ll: list, dt: float, speed=300):
 
 
 def display_score(ft: pygame.font.Font):
-    text_surf = ft.render(f'Space: {pygame.time.get_ticks() // 1000}', True, (255, 255, 255))
+    text_surf = ft.render(f'Score: {pygame.time.get_ticks() // 1000}', True, (255, 255, 255))
     text_rec = text_surf.get_rect(midbottom=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 80))
     display_surface.blit(text_surf, text_rec)
     pygame.draw.rect(display_surface, "white", text_rec.inflate((30, 30)), width=8, border_radius=5)
