@@ -56,7 +56,12 @@ background_surf.fill((255, 255, 255, 180), None, pygame.BLEND_RGBA_MULT)
 
 #  Import Text
 font = pygame.font.Font('./graphics/subatomic.ttf', size=50)
+meteor_timer = pygame.event.custom_type()
+pygame.time.set_timer(meteor_timer, 500)
 
+meteor_surf = pygame.image.load('./graphics/meteor.png').convert_alpha()
+meteor_list = []
+count = 0
 while True:
     # Event loop
     for event in pygame.event.get():
@@ -68,6 +73,11 @@ while True:
             laser_list.append(laser_rec)
             can_shoot = False
             shoot_time = pygame.time.get_ticks()
+        if event.type == meteor_timer:
+            #  Every 500 milliseconds spawn a Meteor.
+            meteor_rec = meteor_surf.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+            meteor_list.append(meteor_rec)
+            count += 1
 
     # Framerate Limit
     delta_time = (clock.tick(FRAMERATE) / 1000)  # Set FrameRate
@@ -100,6 +110,13 @@ while True:
         display_surface.blit(laser_surf, rect)
 
     display_surface.blit(ship_surf, ship_rec)
+
+    if len(meteor_list) > 1:
+        meteor_list.pop()
+    for rect in meteor_list:
+        rect.center = ((WINDOW_WIDTH / 2) + count*5, (WINDOW_HEIGHT / 2) + count*5)
+
+        display_surface.blit(meteor_surf, rect)
 
     # Draw the final Frame
     pygame.display.update()
