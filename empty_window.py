@@ -103,6 +103,18 @@ while True:
     meteor_update(meteor_list, delta_time)
     can_shoot = laser_cooldown(can_shoot, shoot_time)
 
+    #  Ship collision detection
+    for meteor, _ in meteor_list:
+        if ship_rec.colliderect(meteor):
+            pygame.quit()
+            sys.exit()
+
+    for laser in laser_list:
+        for meteor, _ in meteor_list:
+            if laser.colliderect(meteor):
+                laser_list.remove(laser)
+                meteor_list.remove((meteor, _))
+
     # Drawing
     display_surface.fill((12, 2, 26))  # Fill the background color
     display_surface.blit(background_surf, (0, 0))  # Apply the Background Image
