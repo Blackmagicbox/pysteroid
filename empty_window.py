@@ -8,18 +8,17 @@ FRAMERATE = 120
 
 
 def laser_update(_laser_list: list, dt: float, speed=300):
-    for laser in _laser_list:
-        laser.y -= round(speed * dt)
-        if laser.bottom < 0:
-            _laser_list.remove(laser)
+    for _laser in _laser_list:
+        _laser.y -= round(speed * dt)
+        if _laser.bottom < 0:
+            _laser_list.remove(_laser)
 
 
 def meteor_update(_meteor_list, dt: float, speed=300):
-    for meteor_tuple in _meteor_list:
-        meteor, _direction = meteor_tuple
-        meteor.center += _direction * speed * dt
-        if meteor.top > WINDOW_WIDTH:
-            meteor_list.remove(meteor_tuple)
+    for _meteor, _direction in _meteor_list:
+        _meteor.center += _direction * speed * dt
+        if _meteor.top > WINDOW_WIDTH:
+            meteor_list.remove((_meteor, _direction))
 
 
 def display_score(ft: pygame.font.Font):
