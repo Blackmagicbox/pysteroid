@@ -1,4 +1,6 @@
 import sys
+from random import randint, uniform
+
 import pygame
 
 WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
@@ -13,10 +15,11 @@ def laser_update(_laser_list: list, dt: float, speed=300):
 
 
 def meteor_update(_meteor_list, dt: float, speed=300):
-    for meteor in _meteor_list:
-        meteor.y += speed * dt
+    for meteor_tuple in _meteor_list:
+        meteor, _direction = meteor_tuple
+        meteor.center += _direction * speed * dt
         if meteor.top > WINDOW_WIDTH:
-            meteor_list.remove(meteor)
+            meteor_list.remove(meteor_tuple)
 
 
 def display_score(ft: pygame.font.Font):
@@ -82,8 +85,11 @@ while True:
             can_shoot = False
             shoot_time = pygame.time.get_ticks()
         if event.type == meteor_timer:
-            meteor_rec = meteor_surf.get_rect(center=(WINDOW_WIDTH / 2, 0))
-            meteor_list.append(meteor_rec)
+            x_pos = randint(-100, WINDOW_WIDTH + 100)
+            y_pos = randint(-100, -50)
+            meteor_rec = meteor_surf.get_rect(center=(x_pos, y_pos))
+            direction = pygame.math.Vector2(uniform(-0.5, 0.5), 1)
+            meteor_list.append((meteor_rec, direction))
 
     # Framerate Limit
     delta_time = (clock.tick(FRAMERATE) / 1000)  # Set FrameRate
@@ -108,7 +114,7 @@ while True:
 
     display_surface.blit(ship_surf, ship_rec)
 
-    for rect in meteor_list:
+    for rect, _ in meteor_list:
         display_surface.blit(meteor_surf, rect)
 
     # Draw the final Frame
