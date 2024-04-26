@@ -5,11 +5,18 @@ WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 FRAMERATE = 120
 
 
-def laser_update(ll: list, dt: float, speed=300):
-    for laser in ll:
+def laser_update(_laser_list: list, dt: float, speed=300):
+    for laser in _laser_list:
         laser.y -= round(speed * dt)
         if laser.bottom < 0:
-            ll.remove(laser)
+            _laser_list.remove(laser)
+
+
+def meteor_update(_meteor_list, dt: float, speed=300):
+    for meteor in _meteor_list:
+        meteor.y += speed * dt
+        if meteor.top > WINDOW_WIDTH:
+            meteor_list.remove(meteor)
 
 
 def display_score(ft: pygame.font.Font):
@@ -114,7 +121,7 @@ while True:
     if len(meteor_list) > 1:
         meteor_list.pop()
     for rect in meteor_list:
-        rect.center = ((WINDOW_WIDTH / 2) + count*5, (WINDOW_HEIGHT / 2) + count*5)
+        rect.center = ((WINDOW_WIDTH / 2) + count * 5, (WINDOW_HEIGHT / 2) + count * 5)
 
         display_surface.blit(meteor_surf, rect)
 
