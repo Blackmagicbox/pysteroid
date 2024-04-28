@@ -6,6 +6,8 @@ import pygame
 WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 FRAMERATE = 120
 
+score = 0
+
 
 def laser_update(_laser_list: list, dt: float, speed=300):
     for _laser in _laser_list:
@@ -21,8 +23,8 @@ def meteor_update(_meteor_list, dt: float, speed=300):
             meteor_list.remove((_meteor, _direction))
 
 
-def display_score(ft: pygame.font.Font):
-    text_surf = ft.render(f'Score: {pygame.time.get_ticks() // 1000}', True, (255, 255, 255))
+def display_score(ft: pygame.font.Font, kills: int):
+    text_surf = ft.render(f'Score: {(pygame.time.get_ticks() // 1000) + kills}', True, (255, 255, 255))
     text_rec = text_surf.get_rect(midbottom=(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 80))
     display_surface.blit(text_surf, text_rec)
     pygame.draw.rect(display_surface, "white", text_rec.inflate((30, 30)), width=8, border_radius=5)
@@ -72,6 +74,12 @@ pygame.time.set_timer(meteor_timer, 500)
 meteor_surf = pygame.image.load('./graphics/meteor.png').convert_alpha()
 meteor_list = []
 
+# Import Sound
+laser_sound = pygame.mixer.Sound('./sounds/laser.ogg')
+explosion_sound = pygame.mixer.Sound('./sounds/explosion.wav')
+background_music = pygame.mixer.Sound('./sounds/music.wav')
+background_music.play(loops=-1)
+
 while True:
     # Event loop
     for event in pygame.event.get():
@@ -83,6 +91,8 @@ while True:
             laser_list.append(laser_rec)
             can_shoot = False
             shoot_time = pygame.time.get_ticks()
+            # Play Laser Sound
+            laser_sound.play()
         if event.type == meteor_timer:
             x_pos = randint(-100, WINDOW_WIDTH + 100)
             y_pos = randint(-100, -50)
@@ -113,12 +123,14 @@ while True:
             if laser.colliderect(meteor):
                 laser_list.remove(laser)
                 meteor_list.remove((meteor, _))
+                explosion_sound.play()
+                score += 10
 
     # Drawing
     display_surface.fill((12, 2, 26))  # Fill the background color
     display_surface.blit(background_surf, (0, 0))  # Apply the Background Image
 
-    display_score(font)
+    display_score(font, score)
 
     for rect in laser_list:
         display_surface.blit(laser_surf, rect)
